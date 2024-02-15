@@ -2,7 +2,7 @@
 
 Deletes stuff, hopefully quickly
 
-[Download for Windows](https://nightly.link/Dillonb/nmuidi/workflows/build/main/nmuidi-windows.zip)
+[Download for Windows](https://nightly.link/zrodevkaan/nmuidi/workflows/build/main/nmuidi-windows.zip)
 
 ## How to use
 
