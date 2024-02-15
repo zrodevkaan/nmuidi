@@ -32,7 +32,8 @@ Done.
 
 Currently what I have set up allows you to open `nmuidi.exe` and once open it will create a context menu
 meaning you can right click a directory -> "Fast Delete"\
-![img.png](img.png)
+![image](https://github.com/zrodevkaan/nmuidi/assets/90235641/cccbd9c5-7f3c-4255-8f8d-f5474f11fef3)
+
 
 ## Why the dumb name
 
