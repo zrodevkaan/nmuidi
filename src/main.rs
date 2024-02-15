@@ -1,25 +1,40 @@
 use log::{debug, trace};
 use nmuidi::nmuidi::Cleaner;
 use std::{env, time::Instant};
-
+use std::io::{stdin, stdout, Write};
+mod context_menu;
 fn main() {
-    pretty_env_logger::init();
+    context_menu::add_context_menu();
+    let args: Vec<String> = env::args().collect();
+    if args.len() > 1 {
+        print!("Do you want to delete this folder? [y/N]: ");
+        stdout().flush().unwrap();
+        let mut input = String::new();
+        stdin().read_line(&mut input).unwrap();
 
-    let mut directory_timings = Vec::new();
-    let start_time = Instant::now();
-    for dir in env::args().skip(1) {
-        println!("Cleaning {dir}");
-        let start = Instant::now();
+        if input.trim().eq_ignore_ascii_case("y") {
+            pretty_env_logger::init();
+            context_menu::main();
+            let mut directory_timings = Vec::new();
+            let start_time = Instant::now();
+            for dir in args.iter().skip(1) {
+                println!("Cleaning {}", dir);
+                let start = Instant::now();
+                Cleaner::new(dir).clean();
+                directory_timings.push((dir.clone(), start.elapsed()));
+            }
 
-        Cleaner::new(&dir).clean();
-        directory_timings.push((dir, start.elapsed()));
-    }
+            let elapsed_time = start_time.elapsed();
+            debug!("Total time: {:.2?}", elapsed_time);
+            debug!("Directory timings:");
+            for (dir, time_spent) in directory_timings {
+                debug!("  dir {} took {:.2?}", dir, time_spent);
+            }
+            trace!("Done.");
+        }
 
-    let elapsed_time = start_time.elapsed();
-    debug!("Total time: {:.2?}", elapsed_time);
-    debug!("Directory timings:");
-    for (dir, time_spent) in directory_timings {
-        debug!("  dir {dir} took {:.2?}", time_spent);
+    } else {
+        println!("No directory specified!");
     }
     trace!("Done.");
 }

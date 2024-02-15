@@ -28,6 +28,11 @@ Done.
 2. add `use nmuidi::nmuidi::Cleaner;`
 3. Create a cleaner and clean `Cleaner::new("some/path").clean();`
 
+### As a Context Menu
+
+Currently what I have set up allows you to open `nmuidi.exe` and once open it will create a context menu
+meaning you can right click a directory -> "Fast Delete"\
+![img.png](img.png)
 
 ## Why the dumb name
 
