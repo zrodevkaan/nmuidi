@@ -1,20 +1,52 @@
 name: Rust
 
-on:
-  push:
-    branches:
-      - main
+on: [push, pull_request]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_LOG: debug
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  format:
+    runs-on: windows-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - name: cargo-fmt
+        run: cargo fmt --verbose
 
-    - name: Set up Rust
-      uses: actions/setup-rust@v1
+  clippy:
+    runs-on: windows-latest
 
-    - name: Build for Windows
-      run: cargo build --release --target=x86_64-pc-windows-msvc
+    steps:
+      - uses: actions/checkout@v3
+      - name: cargo-clippy
+        run: cargo clippy -- -Dwarnings
+      - name: cargo-clippy-pedantic
+        continue-on-error: true
+        run: cargo clippy -- -W clippy::pedantic
+
+  test:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: cargo-test
+        run: cargo test
+
+  build-windows:
+    runs-on: windows-latest
+    needs: [format, clippy, test]
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Build
+        run: cargo build --all --release
+
+      - name: Upload file
+        uses: actions/upload-artifact@master
+        with:
+          name: nmuidi-windows
+          path: target/release/nmuidi.exe
